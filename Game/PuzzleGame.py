@@ -69,46 +69,48 @@ class PuzzleGame:
 
         return state
 
-    def is_solvable(self, state) -> bool:
+    def is_solvable(self, state: State) -> bool:
         """
-        Check if the puzzle is solvable by analyzing inversions relative to goal states.
+        Check if a state is solvable (can reach at least one of the goal states).
 
-        With special swapping rules, we need to check solvability against each goal state.
+        Note: This is a simplified approach based on inversion count parity.
+        For the 8-puzzle with special rule, a more complex analysis might be needed.
 
         Args:
-            state: Current puzzle state
+            state: The state to check
 
         Returns:
-            True if the puzzle is solvable, False otherwise
+            True if the state is solvable, False otherwise
         """
-        # Convert state to 1D array for inversion counting (exclude blank)
-        state_1d = [num for num in state.board.flatten() if num != 0]
+        # Flatten the board excluding the blank space
+        flat_board = state.board.flatten()
 
-        # Check solvability against each goal state
-        for goal in self.goal_states:
-            # Convert goal to 1D array (exclude blank)
-            goal_1d = [num for num in goal.flatten() if num != 0]
+        # Count inversions for each goal state
+        for goal_state in self.goal_states:
+            flat_goal = goal_state.board.flatten()
 
-            # Count inversions in state relative to this goal
+            # Check parity of permutation between current state and goal state
             inversions = 0
-            for i in range(len(state_1d)):
-                for j in range(i + 1, len(state_1d)):
-                    # Find positions of these tiles in goal state
-                    pos_i = goal_1d.index(state_1d[i])
-                    pos_j = goal_1d.index(state_1d[j])
+            for i in range(9):
+                if flat_board[i] == 0:
+                    continue  # Skip blank space
 
-                    # If they're in opposite order in the goal, count an inversion
+                for j in range(i + 1, 9):
+                    if flat_board[j] == 0:
+                        continue  # Skip blank space
+
+                    # Find positions in goal state
+                    pos_i = np.where(flat_goal == flat_board[i])[0][0]
+                    pos_j = np.where(flat_goal == flat_board[j])[0][0]
+
                     if pos_i > pos_j:
                         inversions += 1
 
-            # Account for blank position parity
-            blank_row_state = state.blank_pos[0]
-            blank_row_goal = np.where(goal == 0)[0][0]
-            row_parity_diff = (blank_row_state - blank_row_goal) % 2
+            # For 3x3 puzzle, if blank is on even row (from bottom) and inversions is odd,
+            # or if blank is on odd row and inversions is even, then it's solvable
+            blank_row = 2 - state.blank_position[0]  # Row from bottom (0-indexed)
 
-            # Special rule: account for 1-3 and 2-4 swaps
-            # These swaps can change parity, so we check both possibilities
-            if inversions % 2 == row_parity_diff or (inversions + 1) % 2 == row_parity_diff:
+            if (blank_row % 2 == 0 and inversions % 2 == 1) or (blank_row % 2 == 1 and inversions % 2 == 0):
                 return True
 
         return False

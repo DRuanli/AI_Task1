@@ -1,3 +1,11 @@
+from Search.Heuristic import Heuristic
+from typing import List, Tuple, Optional, Dict
+from Search.Node import Node
+from puzzle.State import State
+import time
+import heapq
+
+
 class AStar:
     """
     A* search algorithm for the 8-puzzle.

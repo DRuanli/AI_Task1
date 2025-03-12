@@ -1,4 +1,4 @@
-from Heuristic import Heuristic
+from Search.Heuristic import Heuristic
 from puzzle.State import State
 from typing import List
 

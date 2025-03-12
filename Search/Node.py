@@ -1,3 +1,6 @@
+from typing import List, Tuple, Optional, Dict
+from puzzle.State import State
+
 class Node:
     """
     Node in the search tree for the A* algorithm.
