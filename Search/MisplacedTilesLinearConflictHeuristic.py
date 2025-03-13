@@ -1,4 +1,5 @@
 from Heuristic import  Heuristic
+from puzzle.State import State
 
 class MisplacedTilesLinearConflictHeuristic(Heuristic):
     def calculate(self, state, goal_states):
@@ -11,6 +12,7 @@ class MisplacedTilesLinearConflictHeuristic(Heuristic):
         return min(values) if values else 0
 
     def _calculate_misplaced_tiles(self, state, goal_state):
+        """
         misplaced = 0
 
         for row in range(3):
@@ -22,6 +24,13 @@ class MisplacedTilesLinearConflictHeuristic(Heuristic):
                         misplaced += 1
 
         return misplaced
+
+        """
+
+        return sum(
+            1 for row in range(3) for col in range(3)
+            if (tile:=state.board[row,col] != 0 and goal_state.get_tile_position(tile) != (row, col))
+        )
 
     def _calculate_linear_conflicts(self, state: State, goal_state: State) -> int:
         """Calculate linear conflicts."""
