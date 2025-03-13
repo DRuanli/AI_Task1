@@ -1,7 +1,7 @@
 from State import State
 
 class Node:
-    def __init__(self, state, parent, g=0, h=0):
+    def __init__(self, state, parent = None, g=0, h=0):
         self.state = state
         self.parent = parent
         self.g = g
