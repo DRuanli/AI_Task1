@@ -1,4 +1,4 @@
-from Heuristic import Heuristic
+from Search.Heuristic import Heuristic
 
 class ManhattanDistanceHeuristic(Heuristic):
     def calculate(self, state, goal_states):
@@ -8,7 +8,7 @@ class ManhattanDistanceHeuristic(Heuristic):
         total_distance = 0
 
         for i in range(1, 9):
-            current_pos = state.get_tile_position(i)
+            current_pos = state.get_title_position(i)
             goal_pos = goal_state.get_title_position(i)
 
             if current_pos and goal_pos:
