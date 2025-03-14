@@ -2,22 +2,23 @@ from Search.Heuristic import Heuristic
 from puzzle.Node import Node
 import heapq
 
+
 class AStar:
     def __init__(self, heuristic: Heuristic):
         self.heuristic = heuristic
-        self.expended_nodes = []
+        self.expanded_nodes = []
         self.nodes_expanded = 0
         self.max_frontier_size = 0
 
-    def search(self, initial_state, goal_states, max_iterations = 1000):
+    def search(self, initial_state, goal_states, max_iterations=1000):
         open_set = []
         closed_set = set()
 
-        heapq.heappush( open_set, Node(
-            state = initial_state,
-            g = 0,
+        heapq.heappush(open_set, Node(
+            state=initial_state,
+            g=0,
             h=self.heuristic.calculate(initial_state, goal_states)
-        )) # adding index into heap
+        ))
 
         for _ in range(max_iterations):
             if not open_set:
@@ -25,7 +26,7 @@ class AStar:
 
             self.max_frontier_size = max(self.max_frontier_size, len(open_set))
             current_node = heapq.heappop(open_set)
-            self.expended_nodes.append(current_node)
+            self.expanded_nodes.append(current_node)
 
             if current_node.state.is_goal(goal_states):
                 return current_node.get_path(), {
